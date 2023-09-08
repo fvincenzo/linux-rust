@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+
+# To build the kernel requires a particular version of rustc
+rustup override set $(/workspace/linux/scripts/min-tool-version.sh rustc)
+
+# The Rust standard library source is required because the build system will
+# cross-compile core and alloc
+rustup component add rust-src
+
+# The bindings to the C side of the kernel are generated at build time using
+# the bindgen tool
+cargo install --locked --version $(/workspace/linux/scripts/min-tool-version.sh bindgen) bindgen-cli
+
+# The rustfmt tool is used to automatically format all the Rust kernel code
+rustup component add rustfmt
+
+# clippy is a Rust linter
+rustup component add clippy
